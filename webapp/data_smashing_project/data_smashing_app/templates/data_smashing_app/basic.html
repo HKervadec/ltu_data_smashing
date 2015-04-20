@@ -1,0 +1,23 @@
+{% load staticfiles %}
+
+<html>
+<head>
+    <title> Data smashing </title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{% static 'data_smashing_app/bootstrap/css/bootstrap.min.css' %}">
+
+    <!-- Optional theme --> 
+    <link rel="stylesheet" href="{% static 'data_smashing_app/bootstrap/css/bootstrap-theme.min.css' %}">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="{% static 'data_smashing_app/bootstrap/js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+    <div class="container"> 
+        {% block main %}{% endblock %}
+    </div>
+
+</body>
+
+</html>
