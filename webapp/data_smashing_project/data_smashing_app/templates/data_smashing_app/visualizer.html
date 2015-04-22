@@ -1,5 +1,27 @@
 {% extends 'data_smashing_app/basic.html' %}
+{% load staticfiles %}
 
 {% block main %}
+
+<div class="row">
+    <div class="col-md-8">
+        <script src="http://code.highcharts.com/highcharts.js"></script>
+        <script src="http://code.highcharts.com/modules/exporting.js"></script>
+        <script type="text/javascript">
+            signal = {{signal|safe}};
+        </script>
+        <script src="{% static "data_smashing_app/charts/signalchart.js" %}"></script>
+
+        <div id="hccontainer" style="margin: 0 auto"></div>
+    </div>
+    <div class="col-md-4">
+        <br/>
+        <br/>
+        <br/>
+        <button class="btn-block btn btn-primary" >Upload signal</button>
+        <br/>
+        <button class="btn-block btn btn-success" >Begin processing</button>
+    </div>
+</div>
 
 {% endblock %}

@@ -12,10 +12,24 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="{% static 'data_smashing_app/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
 </head>
 <body>
-    <div class="container"> 
-        {% block main %}{% endblock %}
+    <div class="container-fluid"> 
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-10">
+                <h1 style="font-family: roboto; font-weight: 100;">Data smashing</h1>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-xs-1">
+            </div>
+            <div class="col-xs-10">
+            {% block main %}{% endblock %}
+            </div>        
     </div>
 
 </body>
