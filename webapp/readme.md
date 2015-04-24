@@ -1,4 +1,4 @@
-How to prepare inviroment for this app?
+How to prepare enviroment for this app?
 
 1. Install python on your computer
 2. Install wirtual enviroment on your computer
