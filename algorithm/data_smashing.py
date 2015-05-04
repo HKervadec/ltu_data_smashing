@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import re
 
 class Datasmashing:
 
@@ -54,6 +55,8 @@ class Datasmashing:
                 stream_invert.append(inverted_el[0])
 
         return stream_invert
+
+
 
 for i in range(1):
     a = [1, 1, 4, 4, 2, 1, 1, 4, 3, 3, 2, 1, 4, 1, 1, 1, 4, 4, 1, 1]
