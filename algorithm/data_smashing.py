@@ -55,6 +55,43 @@ class Datasmashing:
 
         return stream_invert
 
+    def deviation(self, s, l):
+        coef = (self.alphabet_size - 1.0) / self.alphabet_size
+
+        sum = 0
+        for i in range(len(s)):
+            for j in range(l):
+                if i + j > len(s):
+                    break
+
+                x = s[i:i+j]
+
+                top = 0
+
+                bot = self.alphabet_size ** (2 * len(x))
+
+                sum += top / bot
+
+
+        return coef * sum
+
+    def phi(self, s, x):
+        '''
+
+        :param s: string
+        :param x: substring of s
+        :return:
+        '''
+        s = ''.join(s)
+        x = ''.join(x)
+        result = []
+        denom = s.count(x)
+
+        for i in range(self.alphabet_size):
+            result.append(s.count(x + str(i)) / denom)
+
+        return result
+
 for i in range(1):
     a = [1, 1, 4, 4, 2, 1, 1, 4, 3, 3, 2, 1, 4, 1, 1, 1, 4, 4, 1, 1]
     b = [1, 4, 4, 2, 1, 1, 4, 3, 3, 2, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4]
