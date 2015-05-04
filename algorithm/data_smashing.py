@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import itertools as it
 
 
 class Datasmashing:
@@ -56,23 +57,20 @@ class Datasmashing:
 
         return stream_invert
 
-    def deviation(self, s, l):
-        coef = (self.alphabet_size - 1.0) / self.alphabet_size
+    def deviation(self, s, l_max):
+        coef = float(self.alphabet_size - 1.0) / self.alphabet_size
+        uniform_v = np.ones(self.alphabet_size) / self.alphabet_size
 
         sum = 0
-        for i in range(len(s)):
-            for j in range(l):
-                if i + j > len(s):
-                    break
+        for l in range(1, l_max):
+            for variation in it.product(range(1, self.alphabet_size + 1), repeat=l):
+                # phi vector
+                phi_v = self.phi(s, variation)
+                numerator = np.linalg.norm(phi_v - uniform_v, np.inf)
 
-                x = s[i:i+j]
+                denominator = self.alphabet_size ** (2 * len(variation))
 
-                top = 0
-
-                bot = self.alphabet_size ** (2 * len(x))
-
-                sum += top / bot
-
+                sum += numerator / denominator
 
         return coef * sum
 
@@ -83,21 +81,53 @@ class Datasmashing:
         :param x: substring of s
         :return:
         '''
-        s = ''.join(s)
-        x = ''.join(x)
+        s = ''.join(str(el) for el in s)
+        x = ''.join(str(el) for el in x)
         result = []
         denom = s.count(x)
 
         for i in range(self.alphabet_size):
-            result.append(s.count(x + str(i)) / denom)
+            nominator = s.count(x + str(i))
+            result.append(nominator / denom if not denom == 0 else 0)
 
         return result
 
-for i in range(1):
-    a = [1, 1, 4, 4, 2, 1, 1, 4, 3, 3, 2, 1, 4, 1, 1, 1, 4, 4, 1, 1]
-    b = [1, 4, 4, 2, 1, 1, 4, 3, 3, 2, 1, 4, 1, 1, 1, 4, 4, 1, 1, 4]
-    d = []
-    for i in range(100):
-        d = d + a
-    ds = Datasmashing(4)
-    print ds.stream_inversion(d)
+    def generate(self, probs, length):
+        '''
+        function generate random vector wiht distribution probs
+        param:
+        probs - probabilities
+        length - generated vector length
+        '''
+        from scipy import stats
+        symbols = range(1, self.alphabet_size + 1)
+        custm = stats.rv_discrete(name='custm', values=(symbols, probs))
+        return custm.rvs(size=length)
+
+    def annihilation_circut(self, s1, s2, treshold):
+        s1_inverted = self.stream_inversion(s1)
+        s2_inverted = self.stream_inversion(s2)
+
+        l = int(np.log(1 / treshold) / np.log(self.alphabet_size))
+        print l
+
+        epsilon11 = self.deviation(self.stream_sumation(s1, s1_inverted), l)
+        epsilon12 = self.deviation(self.stream_sumation(s1_inverted, s2), l)
+        epsilon22 = self.deviation(self.stream_sumation(s2, s2_inverted), l)
+
+        print epsilon11, epsilon12, epsilon22
+
+        if epsilon22 < treshold and epsilon11 < treshold:
+            return epsilon12
+        else:
+            raise Exception('Data stream is not long enough')
+
+ds = Datasmashing(10)
+
+probabilities = [0.3, 0.2, 0.15, 0.1, 0.05, 0.03, 0.03, 0.02, 0.06, 0.06]
+probabilities2 = [0.1] * 10
+
+s1 = ds.generate(probabilities, 10000)
+s2 = ds.generate(probabilities2, 10000)
+
+print ds.annihilation_circut(s1, s2, 0.01)
