@@ -8,11 +8,41 @@
         <script src="http://code.highcharts.com/highcharts.js"></script>
         <script src="http://code.highcharts.com/modules/exporting.js"></script>
         <script type="text/javascript">
-            signal = {{signal|safe}};
+            signal = {{signal1| slice:":500"|safe}};
         </script>
         <script src="{% static "data_smashing_app/charts/signalchart.js" %}"></script>
 
         <div id="hccontainer" style="margin: 0 auto"></div>
+
+        <h3>Original signals</h3>
+        <h4>signal 1</h4>
+        <p class="long-word-break"> {{s1_string | slice:":500"}} ... </p>
+        <h4>signal 2</h4>
+        <p class="long-word-break"> {{s2_string | slice:":500"}} ... </p>
+
+        <h3>Inverted signals</h3>
+        <h4>signal 1</h4>
+        <p class="long-word-break"> {{s1_inverted_string | slice:":500"}} ... </p>
+        <h4>signal 2</h4>
+        <p class="long-word-break"> {{s2_inverted_string | slice:":500"}} ... </p>
+
+        <h3>Result signals after sumations</h3>
+        <h4>signal 1 and signal 2</h4>
+        <p class="long-word-break"> {{s1_s2_sum | slice:":500"}} ... </p>
+        <h4>signal 1 and signal 1</h4>
+        <p class="long-word-break"> {{s1_s1_sum | slice:":500"}} ... </p>
+        <h4>signal 2 and signal 2</h4>
+        <p class="long-word-break"> {{s2_s2_sum | slice:":500"}} ... </p>
+
+        <h3>Deviations</h3>
+        <h4>signal 1 and signal 2</h4>
+        <p class="long-word-break"> {{epsilon12}} </p>
+        <h4>signal 1 and signal 1</h4>
+        <p class="long-word-break"> {{epsilon11}} </p>
+        <h4>signal 2 and signal 2</h4>
+        <p class="long-word-break"> {{epsilon22}} </p>
+
+
     </div>
     <div class="col-md-4">
         <br/>
