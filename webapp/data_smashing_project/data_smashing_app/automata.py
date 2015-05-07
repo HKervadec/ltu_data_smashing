@@ -15,8 +15,10 @@ class Automata:
 		self.current_state = randrange(self.size)
 
 	def next_state(self):
+		v = random()
+		
 		for j in xrange(self.size):
-			if random() < self.P[self.current_state][j]:
+			if v < self.P[self.current_state][j]:
 				self.current_state = j
 				return
 
