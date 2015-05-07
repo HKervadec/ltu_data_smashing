@@ -3,25 +3,27 @@ from random import random, randrange
 class Automata:
 	def __init__(self, proba):
 		self.size = len(proba)
+		self.P = [s[:] for s in proba]
 
-		self.P = [s[:] for s in proba]	
+		for i in xrange(self.size):
+			for j in xrange(1, self.size):
+				self.P[i][j] += self.P[i][j-1]
+ 
+		# for l in self.P:
+		# 	print l
 
 		self.current_state = randrange(self.size)
 
 	def next_state(self):
-		v = random()
-
-		for j in range(self.size):
-			s = sum(P[self.current_state][:j+1])
-
-			if v < s:
+		for j in xrange(self.size):
+			if random() < self.P[self.current_state][j]:
 				self.current_state = j
 				return
 
-	def gen_stream(self, size):
-		r = [0] * size
+	def gen_stream(self, length):
+		r = [0] * length
 
-		for i in xrange(size):
+		for i in xrange(length):
 			r[i] = self.current_state
 
 			self.next_state()
@@ -45,4 +47,4 @@ if __name__ == "__main__":
 
 	a = Automata(P)
 
-	print ''.join(map(str, a.gen_stream(10)))
+	print ''.join(map(str, a.gen_stream(20)))
