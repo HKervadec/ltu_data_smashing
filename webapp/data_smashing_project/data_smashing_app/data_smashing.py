@@ -128,12 +128,38 @@ class Datasmashing:
         print epsilon11, epsilon12, epsilon22
 
         if epsilon22 < treshold and epsilon11 < treshold:
-            return epsilon12
+            return epsilon12, True
         else:
-            return epsilon12
+            return epsilon12, False
             # raise Exception('Data stream is not long enough')
 
-# ds = Datasmashing(5)
+def set_axis(tresholds, alphabet_sizes):
+    X, Y = np.meshgrid(tresholds, alphabet_sizes)
+    return X, Y
+
+def calculate_line(tresholds, alphabet_size):
+    ds = Datasmashing(alphabet_size)
+    
+
+
+    results = np.empty(tresholds.shape, dtype=float)
+    colors = np.empty(tresholds.shape, dtype=str)
+    for i in range(len(tresholds)):
+        results[i], colors[i] = ds.annihilation_circut(s1, s2, tresholds[i])
+    
+    return results, colors
+
+def calculate_data(tresholds, alphabet_sizes):
+    X, Y = set_axis(tresholds, alphabet_sizes)
+
+    results = np.empty(X.shape, dtype=float)
+    colors = np.empty(X.shape, dtype=str)
+    for i in range(len(alphabet_sizes)):
+        results[i, :], colors[i, :] = calculate_line(tresholds, alphabet_sizes[i]) 
+
+    return results, colors
+
+
 
 # probabilities = [0.3, 0.2, 0.15, 0.1, 0.05, 0.03, 0.03, 0.02, 0.06, 0.06]
 # probabilities = [0.4, 0.3, 0.2, 0.05, 0.05]
