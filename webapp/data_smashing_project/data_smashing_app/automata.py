@@ -4,19 +4,21 @@ from random import random, randrange
 class Automata:
 	def __init__(self, proba):
 		self.size = len(proba)
-		
 
-		self.P = [s[:] for s in proba]
+		self.P = proba
 
 		for i in xrange(self.size):
 			for j in xrange(1, self.size):
 				self.P[i][j] += self.P[i][j-1]	
 
+		# first state of automata
 		self.current_state = randrange(self.size)
 
 	def next_state(self):
+
+		random_value = random()
 		for j in xrange(self.size):
-			if random() < self.P[self.current_state][j]:
+			if random_value < self.P[self.current_state][j]:
 				self.current_state = j
 				return
 
@@ -24,27 +26,27 @@ class Automata:
 		r = [0] * length
 
 		for i in xrange(length):
-			r[i] = self.current_state
+			r[i] = self.current_state + 1
 
 			self.next_state()
 
 		return r
 
-# if __name__ == "__main__":
-# 	P = [[0] * 3 for _ in range(3)]
+if __name__ == "__main__":
+	P = [[0] * 2 for _ in range(2)]
 
-# 	P[0][0] = 0.5
-# 	P[0][1] = 0.3
-# 	P[0][2] = 0.2
+	P[0][0] = 0.8
+	P[0][1] = 0.2
+	# P[0][2] = 0.2
 
-# 	P[1][0] = 0.25
-# 	P[1][1] = 0.4
-# 	P[1][2] = 0.35
+	P[1][0] = 0.6
+	P[1][1] = 0.4
+	# P[1][2] = 0.35
 
-# 	P[2][0] = 0.15
-# 	P[2][1] = 0.05
-# 	P[2][2] = 0.8
+	# P[2][0] = 0.15
+	# P[2][1] = 0.05
+	# P[2][2] = 0.8
 
-# 	a = Automata(P)
+	a = Automata(P)
 
-# 	print ''.join(map(str, a.gen_stream(10)))
+	print ''.join(map(str, a.gen_stream(10)))
