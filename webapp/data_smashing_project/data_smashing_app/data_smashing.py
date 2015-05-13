@@ -62,7 +62,12 @@ class Datasmashing:
 
         uniform_v = np.ones(self.alphabet_size) / self.alphabet_size
 
-        sum = 0
+        # for empty string
+        phi_v = self.phi(s, '')
+        numerator = np.linalg.norm(phi_v - uniform_v, np.inf)                                
+        denominator = 1
+        sum = numerator / denominator
+
         for l in range(1, l_max + 1):
             for variation in it.product(range(1, self.alphabet_size + 1), repeat=l):
                 # phi vector

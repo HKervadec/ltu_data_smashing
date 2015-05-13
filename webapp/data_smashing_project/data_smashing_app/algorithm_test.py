@@ -60,11 +60,11 @@ def print_stream_in_file(s, file_name):
 def run_datasmashing(tresholds, alphabet_size):
     ds = Datasmashing(alphabet_size)
 
-    p1 = [[0.8, 0.2], [0.8, 0.2]] #[[0.5, 0.3, 0.2], [0.4, 0.5, 0.1], [0.6, 0.3, 0.1]] #[[0.8, 0.2], [0.8, 0.2]]
-    p2 = [[0.2, 0.8], [0.2, 0.8]] #[[0.4, 0.5, 0.1], [0.1, 0.3, 0.6], [0.2, 0.3, 0.5]]  #[[0.2, 0.8], [0.2, 0.8]]
+    p1 = [[0.5, 0.3, 0.2], [0.4, 0.5, 0.1], [0.6, 0.3, 0.1]] #[[0.8, 0.2], [0.8, 0.2]]
+    p2 = [[0.4, 0.5, 0.1], [0.1, 0.3, 0.6], [0.2, 0.3, 0.5]]  #[[0.2, 0.8], [0.2, 0.8]]
 
-    s1 = create_stream(alphabet_size, 10000, p1)
-    s2 = create_stream(alphabet_size, 10000, p2)
+    s1 = create_stream(alphabet_size, 100000, p1)
+    s2 = create_stream(alphabet_size, 100000, p1)
 
     print_stream_in_file(s1, 's1.txt')
     print_stream_in_file(s2, 's2.txt')
@@ -91,7 +91,7 @@ def run_datasmashing(tresholds, alphabet_size):
 
 
 tresholds = np.arange(0.4,0,-0.02) #np.array([0.5, 0.2, 0.05, 0.01, 0.005, 0.001])
-alphabet_size = 2
+alphabet_size = 3
 run_datasmashing(tresholds, alphabet_size)
 # fig = plt.figure()
 # ax = fig.gca(projection='3d')
