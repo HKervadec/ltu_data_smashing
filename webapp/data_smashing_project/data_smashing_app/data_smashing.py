@@ -41,6 +41,7 @@ class Datasmashing:
         shortest_length = sys.maxint
         for i in range(self.alphabet_size-1):
             s_copy = self.independent_stream_copy(s)
+
             if shortest_length > len(s_copy):
                 shortest_length = len(s_copy)
             stream_copies.append(s_copy)
@@ -126,6 +127,9 @@ class Datasmashing:
     def annihilation_circut(self, s1, s2, treshold):
         s1_inverted = self.stream_inversion(s1)
         s2_inverted = self.stream_inversion(s2)
+
+        print len(s1_inverted)
+        print len(s2_inverted)
 
         l = int(np.log(1 / treshold) / np.log(self.alphabet_size))
         
