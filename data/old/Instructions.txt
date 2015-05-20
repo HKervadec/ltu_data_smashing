@@ -1,0 +1,11 @@
+DATA_data_smashing.mat
+Inside you will find structure called VehiclePassage. You are interested only in one filed of this structure - accelerometer data.  
+In Matalb (Octave) you can extract it simply by VehiclePassage.DataPacketA.acc_data or plot by calling plot(VehiclePassage.DataPacketA.acc_data).
+______________________________________________________
+
+VehiclePassage_SYS_1_120006_428.mat
+The attached is .mat file with measurements for three different type of vehicles.
+MC - motorcycles (50 passages)
+PC - passenger cars (500 passages)
+HMV - Heavy goods road motor vehicles (82 passages)
+The data stored as cell arrays. Inside of each array the first column represents the structure of the same form as VehiclePassage in the previous mail. So you can access the data by calling, e.g. MC{2,1}.DataPacketA.acc_data you will get the accelerometer data for the second passage of motorcycle.

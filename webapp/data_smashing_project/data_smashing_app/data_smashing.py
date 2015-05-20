@@ -128,9 +128,6 @@ class Datasmashing:
         s1_inverted = self.stream_inversion(s1)
         s2_inverted = self.stream_inversion(s2)
 
-        print len(s1_inverted)
-        print len(s2_inverted)
-
         l = int(np.log(1 / treshold) / np.log(self.alphabet_size))
         
         epsilon11 = self.deviation(self.stream_sumation(s1, s1_inverted), l)
