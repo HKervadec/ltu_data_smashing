@@ -8,4 +8,4 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('data_smashing_app.urls')),
-]
+] 

@@ -67,35 +67,49 @@ def compute_similarity_matrix(data, threshold, alphabet_size):
     similarity_matrix = np.empty([data.shape[1], data.shape[1]])
 
     print data.shape
-
+    repeating = 1
     for i in range(data.shape[1]):
+        column_i = data[:, i]
+        column_i_concat = np.array([])
+        for k in range(repeating):
+            column_i_concat = np.concatenate((column_i_concat, column_i), axis=0)
+        print_stream_in_file(column_i_concat, 'test_' + str(i))
         for j in range(i+1):
-            column_i = data[:, i]
-            column_j = data[:, j]
-            # print column_i.shape
-            #print column_i
-            # print column_j
-            result_matrix, corectness = ds.annihilation_circut(column_i, column_j, threshold)
+            
+            column_j = data[:, j]            
+            column_j_concat = np.array([])
+            for k in range(repeating):                
+                column_j_concat = np.concatenate((column_j_concat, column_j), axis=0)
 
-            #print result_matrix[1, 0]
+            column_i_concat = [int(l) for l in column_i_concat]
+            column_j_concat = [int(l) for l in column_j_concat]
+            
+            result_matrix, corectness = ds.annihilation_circut(column_i_concat, column_j_concat, threshold)
+
+            # print result_matrix
+
             similarity_matrix[i][j] = result_matrix[0][1]
             similarity_matrix[j][i] = result_matrix[1][0]
-            print corectness
+            # print corectness
+
 
     return similarity_matrix
 
 
 
-hmv, lmv1, lmv2 = read_data_for_vehicles('data.mat', [0.9, 1])
+hmv, lmv1, lmv2 = read_data_for_vehicles('data.mat', [0.3, 1])
 
 # print lmv1[:,1:3]
 
 
 from algorithm_test import print_stream_in_file
 
-print_stream_in_file(hmv[:,0], 'test1.txt')
-print_stream_in_file(hmv[:,1], 'test2.txt')
+# print_stream_in_file(lmv1[:,0], '1test1_lmv1.txt')
+# print_stream_in_file(lmv1[:,1], '1test2_lmv1.txt')
 
 # print lmv1.shape
-# similarity_matrix = compute_similarity_matrix(lmv1[:,:2], 0.1, 2)
-# print similarity_matrix
+
+
+
+similarity_matrix = compute_similarity_matrix(np.concatenate((hmv[:,:3], lmv1[:,:3], lmv2[:,:3]), axis=1), 0.1, 2)
+print similarity_matrix

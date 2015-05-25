@@ -60,7 +60,7 @@ class Datasmashing:
 
     def deviation(self, s, l_max):
         coef = float(self.alphabet_size - 1.0) / self.alphabet_size
-
+        
         uniform_v = np.ones(self.alphabet_size) / self.alphabet_size
 
         # for empty string
@@ -73,7 +73,7 @@ class Datasmashing:
             for variation in it.product(range(1, self.alphabet_size + 1), repeat=l):
                 # phi vector
                 phi_v = self.phi(s, variation)
-
+                # print phi_v
                 numerator = np.linalg.norm(phi_v - uniform_v, np.inf)
                                 
                 denominator = self.alphabet_size ** (2 * len(variation))
@@ -93,13 +93,17 @@ class Datasmashing:
         s = ''.join(str(el) for el in s)
         x = ''.join(str(el) for el in x)
         result = []
-        
+
         for i in range(1, self.alphabet_size + 1):
             nominator = s.count(x + str(i))
             result.append(float(nominator))
 
         denom = sum(result)
-
+        # print result
+        # print x
+        # print s
+        # print denom
+        
         if denom == 0:
             return [0] * self.alphabet_size
         return [x / float(denom) for x in result]
@@ -130,6 +134,8 @@ class Datasmashing:
 
         l = int(np.log(1 / treshold) / np.log(self.alphabet_size))
         
+        # print len(self.stream_sumation(s1, s1_inverted))
+
         epsilon11 = self.deviation(self.stream_sumation(s1, s1_inverted), l)
         epsilon21 = self.deviation(self.stream_sumation(s1_inverted, s2), l)
         epsilon12 = self.deviation(self.stream_sumation(s1, s2_inverted), l)
@@ -138,3 +144,15 @@ class Datasmashing:
         matrix = np.array([[epsilon11, epsilon12], [epsilon21, epsilon22]])
 
         return matrix, (epsilon22 < treshold and epsilon11 < treshold)
+
+    def copy_smashing(self, s1, threshold):
+        s_copy = self.independent_stream_copy(s1)
+        s1_inverted = self.stream_inversion(s1)
+
+        l = int(np.log(1 / threshold) / np.log(self.alphabet_size))       
+       
+
+        epsilon11 = self.deviation(self.stream_sumation(s_copy, s1_inverted), l)
+        # epsilon21 = self.deviation(self.stream_sumation(s1_inverted, s2), l)
+
+        return epsilon11
