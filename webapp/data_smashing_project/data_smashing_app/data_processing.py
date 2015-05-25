@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.io as scio
 from data_smashing import Datasmashing
+import csv
 
 def load_data(file_name):
     ''' 
@@ -95,21 +96,39 @@ def compute_similarity_matrix(data, threshold, alphabet_size):
 
     return similarity_matrix
 
+def read_text_file(name):
+    with open(name, 'rb') as csvfile:
+        reader = csv.reader(csvfile, delimiter='\n', quotechar='|')
+        data = []
+        for row in reader:
+            data.append(int(row[0]) + 1)
+    return data
 
 
-hmv, lmv1, lmv2 = read_data_for_vehicles('data.mat', [0.3, 1])
+# hmv, lmv1, lmv2 = read_data_for_vehicles('data.mat', [0.3, 1])
 
 # print lmv1[:,1:3]
 
 
-from algorithm_test import print_stream_in_file
+# from algorithm_test import print_stream_in_file
 
 # print_stream_in_file(lmv1[:,0], '1test1_lmv1.txt')
 # print_stream_in_file(lmv1[:,1], '1test2_lmv1.txt')
 
 # print lmv1.shape
+from algorithm_test import print_stream_in_file
+
+tx1 = read_text_file('0017.txt')
+tx2 = read_text_file('0018.txt')
+
+print_stream_in_file(tx1, '0017' + str('-1'))
+print_stream_in_file(tx2, '0018' + str('-1'))
 
 
+ds = Datasmashing(2)
+result_matrix, corectness = ds.annihilation_circut(tx1, tx2, 0.25)
+print result_matrix
 
-similarity_matrix = compute_similarity_matrix(np.concatenate((hmv[:,:3], lmv1[:,:3], lmv2[:,:3]), axis=1), 0.1, 2)
-print similarity_matrix
+
+# similarity_matrix = compute_similarity_matrix(np.concatenate((hmv[:,:3], lmv1[:,:3], lmv2[:,:3]), axis=1), 0.1, 2)
+# print similarity_matrix

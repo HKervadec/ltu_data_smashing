@@ -41,6 +41,7 @@ class Datasmashing:
         shortest_length = sys.maxint
         for i in range(self.alphabet_size-1):
             s_copy = self.independent_stream_copy(s)
+
             if shortest_length > len(s_copy):
                 shortest_length = len(s_copy)
             stream_copies.append(s_copy)
@@ -59,15 +60,22 @@ class Datasmashing:
 
     def deviation(self, s, l_max):
         coef = float(self.alphabet_size - 1.0) / self.alphabet_size
+        
         uniform_v = np.ones(self.alphabet_size) / self.alphabet_size
 
-        sum = 0
-        for l in range(1, l_max):
+        # for empty string
+        phi_v = self.phi(s, '')
+        numerator = np.linalg.norm(phi_v - uniform_v, np.inf)                                
+        denominator = 1
+        sum = numerator / denominator
+
+        for l in range(1, l_max + 1):
             for variation in it.product(range(1, self.alphabet_size + 1), repeat=l):
                 # phi vector
                 phi_v = self.phi(s, variation)
+                # print phi_v
                 numerator = np.linalg.norm(phi_v - uniform_v, np.inf)
-
+                                
                 denominator = self.alphabet_size ** (2 * len(variation))
 
                 sum += numerator / denominator
@@ -81,16 +89,24 @@ class Datasmashing:
         :param x: substring of s
         :return:
         '''
+
         s = ''.join(str(el) for el in s)
         x = ''.join(str(el) for el in x)
         result = []
-        denom = s.count(x)
 
-        for i in range(self.alphabet_size):
+        for i in range(1, self.alphabet_size + 1):
             nominator = s.count(x + str(i))
-            result.append(nominator / denom if not denom == 0 else 0)
+            result.append(float(nominator))
 
-        return result
+        denom = sum(result)
+        # print result
+        # print x
+        # print s
+        # print denom
+        
+        if denom == 0:
+            return [0] * self.alphabet_size
+        return [x / float(denom) for x in result]
 
     def generate(self, probs, length):
         '''
@@ -99,35 +115,44 @@ class Datasmashing:
         probs - probabilities
         length - generated vector length
         '''
-        from scipy import stats
-        symbols = range(1, self.alphabet_size + 1)
-        custm = stats.rv_discrete(name='custm', values=(symbols, probs))
-        return custm.rvs(size=length)
+        # from scipy import stats
+        # symbols = range(1, self.alphabet_size + 1)
+        # custm = stats.rv_discrete(name='custm', values=(symbols, probs))
+
+        # return custm.rvs(size=length)
+        vector = []
+        for i in range(1, self.alphabet_size + 1):
+            vector = vector + ([i] * int(probs[i-1] * length))
+        from random import shuffle
+        shuffle(vector)
+        shuffle(vector)
+        return vector
 
     def annihilation_circut(self, s1, s2, treshold):
         s1_inverted = self.stream_inversion(s1)
         s2_inverted = self.stream_inversion(s2)
 
         l = int(np.log(1 / treshold) / np.log(self.alphabet_size))
-        print l
+        
+        # print len(self.stream_sumation(s1, s1_inverted))
 
         epsilon11 = self.deviation(self.stream_sumation(s1, s1_inverted), l)
-        epsilon12 = self.deviation(self.stream_sumation(s1_inverted, s2), l)
+        epsilon21 = self.deviation(self.stream_sumation(s1_inverted, s2), l)
+        epsilon12 = self.deviation(self.stream_sumation(s1, s2_inverted), l)
         epsilon22 = self.deviation(self.stream_sumation(s2, s2_inverted), l)
 
-        print epsilon11, epsilon12, epsilon22
+        matrix = np.array([[epsilon11, epsilon12], [epsilon21, epsilon22]])
 
-        if epsilon22 < treshold and epsilon11 < treshold:
-            return epsilon12
-        else:
-            raise Exception('Data stream is not long enough')
+        return matrix, (epsilon22 < treshold and epsilon11 < treshold)
 
-ds = Datasmashing(10)
+    def copy_smashing(self, s1, threshold):
+        s_copy = self.independent_stream_copy(s1)
+        s1_inverted = self.stream_inversion(s1)
 
-probabilities = [0.3, 0.2, 0.15, 0.1, 0.05, 0.03, 0.03, 0.02, 0.06, 0.06]
-probabilities2 = [0.1] * 10
+        l = int(np.log(1 / threshold) / np.log(self.alphabet_size))       
+       
 
-s1 = ds.generate(probabilities, 10000)
-s2 = ds.generate(probabilities2, 10000)
+        epsilon11 = self.deviation(self.stream_sumation(s_copy, s1_inverted), l)
+        # epsilon21 = self.deviation(self.stream_sumation(s1_inverted, s2), l)
 
-print ds.annihilation_circut(s1, s2, 0.01)
+        return epsilon11
