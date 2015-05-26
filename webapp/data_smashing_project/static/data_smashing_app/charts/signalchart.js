@@ -1,13 +1,13 @@
 $(document).ready(
     $(function () {
-        $('#hccontainer').highcharts({
+        $('#signalsc').highcharts({
             title: {
-                text: 'Source signal',
-                x: -20 //center
+                text: 'Source signals',
+               
             },
             yAxis: {
                 title: {
-                    text: 'Signal'
+                    text: 'Value'
                 },
                 plotLines: [{
                     value: 0,
@@ -20,10 +20,7 @@ $(document).ready(
                     enabled: false
                 }
             },
-            series: [{
-                showInLegend: false,
-                data: signal
-            }],
+            series: signals,
             plotOptions:{
                 series:{
                     lineWidth: 1

@@ -3,54 +3,148 @@
 
 {% block main %}
 
+<h2> Upload your data </h2>
+<hr/>
+
 <div class="row">
-    <div class="col-md-8">
-        <script src="http://code.highcharts.com/highcharts.js"></script>
-        <script src="http://code.highcharts.com/modules/exporting.js"></script>
-        <script type="text/javascript">
-            signal = {{signal1| slice:":500"|safe}};
-        </script>
+    <br/>
+    <div class="col-md-6">
+
+        
+        <form enctype="multipart/form-data" action="/" method="post">
+            <input type="file" name="myfiles" multiple class="btn btn-default btn-file btn-block form-control">
+            <br/>
+            Quantization levels: <input type="text" name="quantization" class="form-control"><br/>
+            Threshold : <input type="text" name="threshold" class="form-control">
+            <br/><br/>
+            <input type="submit" name="upload" class="btn-block btn btn-primary" value="Upload signal">
+            {% csrf_token %}
+        </form>   
+        <br/><br/><br/>     
+    </div>
+    <div class="col-md-6 font-size-18">
+        <p> Upload your data using that form.</p>
+        <p> Data in files have to be seperated using new line. You have to upload at least two data files. Each file contains only one signal set.</p>
+        <p> In field quantization please provide coma sperated quantization levels. That levels are delimiter between two classes in quantization process. For example if you want to have alphabet wiht two symbols first symobl describe data lower than 2 and the second others then quantization level is 2. If you want to have tree classes then provide two levels seperated with coma (e.g. 1, 2). Levels are of type float. </p>
+        <p> Threshold is value that is used to separate similar signals from different. 
+        </p>
+    </div>
+</div>
+
+<h2> Deviation results </h2>
+<hr/>
+
+<div class="row">
+    <div class="col-xs-12 text-align-center">
+        <table class="result-table">
+            <tr>
+                <td></td>
+                {% for name in files %}
+                    <td class="padding-10 text-align-center">
+                        {{name}}
+                    </td>
+                {% endfor %}
+            </tr>
+            {% for row in similarity %}
+            <tr>
+                <td class="padding-10">
+                    {{row.0}}
+                </td>
+                {% for data in row.1 %}
+                    <td class="result-table-cell {% if data > threshold %} fill-red {% else %} fill-green {% endif %}">
+                        {{data|floatformat:3}}
+                    </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+        <br/><br/><br/>
+    </div>
+</div>
+
+<h2> Intermediate results </h2>
+<hr/>
+
+<div class="row">
+    <!-- highchart part -->
+    <script type="text/javascript">
+        signals = [
+            {% for i, stream in signals %}
+                {
+                    name: "{{i}}",
+                    data: {{stream|safe}}
+                }
+                {% if not forloop.last %} , {% endif %}
+            {% endfor %}
+        ];
+        inverted_strams = [
+            {% for i, stream in inverted_strams %}
+                {
+                    name: "{{i}}",
+                    data: {{stream|safe}}
+                }
+                {% if not forloop.last %} , {% endif %}
+            {% endfor %}
+        ]; 
+        independent_stream_copies = [
+            {% for i, stream in independent_stream_copies %}
+                {
+                    name: "{{i}}",
+                    data: {{stream|safe}}
+                }
+                {% if not forloop.last %} , {% endif %}
+            {% endfor %}
+        ];
+        stream_sumations = [
+            {% for i, j, stream in stream_sumations %}
+                {
+                    name: "{{i}}-{{j}}",
+                    data: {{stream|safe}}
+                }
+                {% if not forloop.last %} , {% endif %}
+            {% endfor %}
+        ];           
+    </script>
+    <script src=" http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <!-- end of highchart part -->
+
+    <div class="col-md-6">      
+
         <script src="{% static "data_smashing_app/charts/signalchart.js" %}"></script>
 
-        <div id="hccontainer" style="margin: 0 auto"></div>
-
-        <h3>Original signals</h3>
-        <h4>signal 1</h4>
-        <p class="long-word-break"> {{s1_string | slice:":500"}} ... </p>
-        <h4>signal 2</h4>
-        <p class="long-word-break"> {{s2_string | slice:":500"}} ... </p>
-
-        <h3>Inverted signals</h3>
-        <h4>signal 1</h4>
-        <p class="long-word-break"> {{s1_inverted_string | slice:":500"}} ... </p>
-        <h4>signal 2</h4>
-        <p class="long-word-break"> {{s2_inverted_string | slice:":500"}} ... </p>
-
-        <h3>Result signals after sumations</h3>
-        <h4>signal 1 and signal 2</h4>
-        <p class="long-word-break"> {{s1_s2_sum | slice:":500"}} ... </p>
-        <h4>signal 1 and signal 1</h4>
-        <p class="long-word-break"> {{s1_s1_sum | slice:":500"}} ... </p>
-        <h4>signal 2 and signal 2</h4>
-        <p class="long-word-break"> {{s2_s2_sum | slice:":500"}} ... </p>
-
-        <h3>Deviations</h3>
-        <h4>signal 1 and signal 2</h4>
-        <p class="long-word-break"> {{epsilon12}} </p>
-        <h4>signal 1 and signal 1</h4>
-        <p class="long-word-break"> {{epsilon11}} </p>
-        <h4>signal 2 and signal 2</h4>
-        <p class="long-word-break"> {{epsilon22}} </p>
-
+        <div id="signalsc" style="margin: 0 auto"></div>        
 
     </div>
-    <div class="col-md-4">
-        <br/>
-        <br/>
-        <br/>
-        <button class="btn-block btn btn-primary" >Upload signal</button>
-        <br/>
-        <button class="btn-block btn btn-success" >Begin processing</button>
+    <div class="col-md-6">      
+
+        <script src="{% static "data_smashing_app/charts/inverted.js" %}"></script>
+
+        <div id="invertedc" style="margin: 0 auto"></div>        
+
+    </div>
+    <div class="col-md-6">      
+
+        <script src="{% static "data_smashing_app/charts/independent.js" %}"></script>
+
+        <div id="independetc" style="margin: 0 auto"></div>        
+
+    </div>
+    <div class="col-md-6">      
+
+        <script src="{% static "data_smashing_app/charts/sumations.js" %}"></script>
+
+        <div id="sumationsc" style="margin: 0 auto"></div>        
+
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-xs-12 text-align-center">
+    <br/><br/>
+        <hr/>
+        <p> Tomáš Urbanec, Héctor Anadón León, Hoel Zomzom Kervadec, Primož Godec
     </div>
 </div>
 

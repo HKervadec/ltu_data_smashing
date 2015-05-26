@@ -55,7 +55,7 @@ def print_stream_in_file(s, file_name):
     '''
     with open(file_name, 'w') as fp:
         for v in s:
-            fp.write(str(v) + " ") # python will convert \n to os.linesep
+            fp.write(str(v) + "") # python will convert \n to os.linesep
         fp.close()
 
 def run_datasmashing(tresholds, alphabet_size):
@@ -114,9 +114,9 @@ def run_datasmashing(tresholds, alphabet_size):
 
 
 
-tresholds = np.arange(0.4,0,-0.02) #np.array([0.5, 0.2, 0.05, 0.01, 0.005, 0.001])
-alphabet_size = 2
-run_datasmashing(tresholds, alphabet_size)
+# tresholds = np.arange(0.4,0,-0.02) #np.array([0.5, 0.2, 0.05, 0.01, 0.005, 0.001])
+# alphabet_size = 2
+# run_datasmashing(tresholds, alphabet_size)
 # # fig = plt.figure()
 # # ax = fig.gca(projection='3d')
 # surf = ax.plot_surface(X, Y, results, rstride=1, cstride=1, facecolors=colors,

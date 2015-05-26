@@ -2,3 +2,47 @@
 {
     word-wrap:break-word;
 }
+
+.result-table-cell
+{
+    width: 80px;
+    height: 80px;
+    text-align: center;
+}
+
+.fill-red
+{
+    background-color: red;
+}
+
+.fill-green
+{
+    background-color: green;
+}
+
+.padding-10
+{
+    padding: 10 10 10 10;
+}
+
+.text-align-center
+{
+    text-align: center;
+    margin: 0 auto;
+}
+
+.result-table
+{
+    display: inline-block;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+    font-family: roboto; 
+    font-weight: 100;
+}
+
+.font-size-18
+{
+    font-size: 18;
+}
