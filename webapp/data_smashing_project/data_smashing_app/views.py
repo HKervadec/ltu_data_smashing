@@ -12,6 +12,8 @@ def visualizer(request):
 
     submited_data = []
     filenames = []
+
+    dict['data_posted'] = False
     
     # if post files were uploaded
     if request.method == "POST":
@@ -37,5 +39,7 @@ def visualizer(request):
         dict['independent_stream_copies'] = zip(filenames, independent_stream_copies)
         dict['stream_sumations'] = zip( [x for x in filenames for i in range(len(filenames))], filenames * (len(filenames)), stream_sumations)
         dict['threshold'] = threshold
+
+        dict['data_posted'] = True
 
     return render(request, 'data_smashing_app/visualizer.html', dict)
