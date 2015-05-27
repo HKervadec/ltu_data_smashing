@@ -64,7 +64,7 @@ def run_datasmashing(tresholds, alphabet_size):
     # p1 = [[0.5, 0.3, 0.2], [0.4, 0.5, 0.1], [0.6, 0.3, 0.1]] #[[0.8, 0.2], [0.8, 0.2]]
     
     # p2 = [[0.4, 0.5, 0.1], [0.1, 0.3, 0.6], [0.2, 0.3, 0.5]]  
-    p1 =[[0.5, 0.5], [0.5, 0.5]]
+    p1 =[[0.8, 0.2], [0.8, 0.2]]
     p2 =[[0.2, 0.80], [0.50, 0.50]]
     # p2 =[[0.5, 0.5], [0.5, 0.5]]
     # p2 = [[0.8, 0.1, 0.02, 0.02, 0.06],
@@ -85,8 +85,8 @@ def run_datasmashing(tresholds, alphabet_size):
     #     [0.2, 0.2, 0.2, 0.2, 0.2]]
 
 
-    s1 = create_stream(alphabet_size, 30000, p1)
-    s2 = create_stream(alphabet_size, 30000, p2)
+    s1 = create_stream(alphabet_size, 500, p1)
+    s2 = create_stream(alphabet_size, 500, p2)
     import collections
     print collections.Counter(s1)
 
