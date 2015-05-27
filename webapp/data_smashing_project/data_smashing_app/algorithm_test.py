@@ -1,11 +1,11 @@
 import numpy as np
 from data_smashing import Datasmashing
 
-from mpl_toolkits.mplot3d import Axes3D
+#from mpl_toolkits.mplot3d import Axes3D
 from automata import Automata
-from matplotlib import cm
-from matplotlib.ticker import LinearLocator, FormatStrFormatter
-import matplotlib.pyplot as plt
+# matplotlib import cm
+#from matplotlib.ticker import LinearLocator, FormatStrFormatter
+#import matplotlib.pyplot as plt
 
 def set_axis(tresholds, alphabet_sizes):
     X, Y = np.meshgrid(tresholds, alphabet_sizes)
@@ -65,7 +65,9 @@ def run_datasmashing(tresholds, alphabet_size):
     
     # p2 = [[0.4, 0.5, 0.1], [0.1, 0.3, 0.6], [0.2, 0.3, 0.5]]  
     p1 =[[0.8, 0.2], [0.8, 0.2]]
-    p2 =[[0.2, 0.80], [0.50, 0.50]]
+    p2 =[[0.85, 0.15], [0.85, 0.15]]
+    p3 =[[0.25, 0.75], [0.75, 0.25]]
+    p4 =[[0.5, 0.5], [0.5, 0.5]]
     # p2 =[[0.5, 0.5], [0.5, 0.5]]
     # p2 = [[0.8, 0.1, 0.02, 0.02, 0.06],
     #     [0.8, 0.1, 0.02, 0.02, 0.06],
@@ -85,22 +87,51 @@ def run_datasmashing(tresholds, alphabet_size):
     #     [0.2, 0.2, 0.2, 0.2, 0.2]]
 
 
-    s1 = create_stream(alphabet_size, 500, p1)
-    s2 = create_stream(alphabet_size, 500, p2)
-    import collections
-    print collections.Counter(s1)
+    saa1 = create_stream(alphabet_size, 500, p1)
+    saa2 = create_stream(alphabet_size, 500, p1)
+    saa3 = create_stream(alphabet_size, 500, p1)
+    saa4 = create_stream(alphabet_size, 50, p1)
+    sab1 = create_stream(alphabet_size, 500, p2)
+    sab2 = create_stream(alphabet_size, 500, p2)
+    sab3 = create_stream(alphabet_size, 500, p2)
+    sab4 = create_stream(alphabet_size, 5000, p2)
+    sb1 = create_stream(alphabet_size, 500, p3)
+    sb2 = create_stream(alphabet_size, 500, p3)
+    sb3 = create_stream(alphabet_size, 500, p3)
+    sb4 = create_stream(alphabet_size, 500, p3)
+    sc1 = create_stream(alphabet_size, 500, p4)
+    sc2 = create_stream(alphabet_size, 500, p4)
+    sc3 = create_stream(alphabet_size, 500, p4)
+    sc4 = create_stream(alphabet_size, 500, p4)
+    #import collections
+    #print collections.Counter(s1)
 
-    print_stream_in_file(s1, 's3.txt')
-    print_stream_in_file(s2, 's4.txt')
+    print_stream_in_file(saa1, 'saa1.txt')
+    print_stream_in_file(saa2, 'saa2.txt')
+    print_stream_in_file(saa3, 'saa3.txt')
+    print_stream_in_file(saa4, 'saa4.txt')
+    print_stream_in_file(sab1, 'sab1.txt')
+    print_stream_in_file(sab2, 'sab2.txt')
+    print_stream_in_file(sab3, 'sab3.txt')
+    print_stream_in_file(sab4, 'sab4.txt')
+    print_stream_in_file(sb1, 'sb1.txt')
+    print_stream_in_file(sb2, 'sb2.txt')
+    print_stream_in_file(sb3, 'sb3.txt')
+    print_stream_in_file(sb4, 'sb4.txt')
+    print_stream_in_file(sc1, 'sc1.txt')
+    print_stream_in_file(sc2, 'sc2.txt')
+    print_stream_in_file(sc3, 'sc3.txt')
+    print_stream_in_file(sc4, 'sc4.txt')
+
 
     #results = np.empty(tresholds.shape, dtype=float)
     #length_sufficiency = np.empty(tresholds.shape, dtype=str)
-    for i in range(len(tresholds)):
-        results, length_sufficiency = ds.annihilation_circut(s1, s2, tresholds[i])
-        print "treshold: ", tresholds[i]
-        print "results:"
-        print results
-        print "sufficiency: ", length_sufficiency
+    #for i in range(len(tresholds)):
+     #   results, length_sufficiency = ds.annihilation_circut(s1, s2, tresholds[i])
+      #  print "treshold: ", tresholds[i]
+       # print "results:"
+        #print results
+        #print "sufficiency: ", length_sufficiency
 
 # p = [[[1]],
 #     [[0.8, 0.2], [0.6, 0.4]],
