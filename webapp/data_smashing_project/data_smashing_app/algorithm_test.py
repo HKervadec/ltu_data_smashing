@@ -55,7 +55,7 @@ def print_stream_in_file(s, file_name):
     '''
     with open(file_name, 'w') as fp:
         for v in s:
-            fp.write(str(v) + "") # python will convert \n to os.linesep
+            fp.write(str(v) + "\n") # python will convert \n to os.linesep
         fp.close()
 
 def run_datasmashing(tresholds, alphabet_size):
@@ -64,8 +64,8 @@ def run_datasmashing(tresholds, alphabet_size):
     # p1 = [[0.5, 0.3, 0.2], [0.4, 0.5, 0.1], [0.6, 0.3, 0.1]] #[[0.8, 0.2], [0.8, 0.2]]
     
     # p2 = [[0.4, 0.5, 0.1], [0.1, 0.3, 0.6], [0.2, 0.3, 0.5]]  
-    p1 =[[0.8, 0.2], [0.8, 0.2]]
-    p2 =[[0.75, 0.25], [0.85, 0.15]]
+    p1 =[[0.5, 0.5], [0.5, 0.5]]
+    p2 =[[0.2, 0.80], [0.50, 0.50]]
     # p2 =[[0.5, 0.5], [0.5, 0.5]]
     # p2 = [[0.8, 0.1, 0.02, 0.02, 0.06],
     #     [0.8, 0.1, 0.02, 0.02, 0.06],
@@ -90,8 +90,8 @@ def run_datasmashing(tresholds, alphabet_size):
     import collections
     print collections.Counter(s1)
 
-    print_stream_in_file(s1, 's1.txt')
-    print_stream_in_file(s2, 's2.txt')
+    print_stream_in_file(s1, 's3.txt')
+    print_stream_in_file(s2, 's4.txt')
 
     #results = np.empty(tresholds.shape, dtype=float)
     #length_sufficiency = np.empty(tresholds.shape, dtype=str)
@@ -114,9 +114,9 @@ def run_datasmashing(tresholds, alphabet_size):
 
 
 
-# tresholds = np.arange(0.4,0,-0.02) #np.array([0.5, 0.2, 0.05, 0.01, 0.005, 0.001])
-# alphabet_size = 2
-# run_datasmashing(tresholds, alphabet_size)
+tresholds = np.arange(0.4,0,-0.02) #np.array([0.5, 0.2, 0.05, 0.01, 0.005, 0.001])
+alphabet_size = 2
+run_datasmashing(tresholds, alphabet_size)
 # # fig = plt.figure()
 # # ax = fig.gca(projection='3d')
 # surf = ax.plot_surface(X, Y, results, rstride=1, cstride=1, facecolors=colors,
