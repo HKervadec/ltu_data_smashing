@@ -64,10 +64,16 @@ def run_datasmashing(tresholds, alphabet_size):
     # p1 = [[0.5, 0.3, 0.2], [0.4, 0.5, 0.1], [0.6, 0.3, 0.1]] #[[0.8, 0.2], [0.8, 0.2]]
     
     # p2 = [[0.4, 0.5, 0.1], [0.1, 0.3, 0.6], [0.2, 0.3, 0.5]]  
-    p1 =[[0.8, 0.2], [0.8, 0.2]]
-    p2 =[[0.85, 0.15], [0.85, 0.15]]
-    p3 =[[0.25, 0.75], [0.75, 0.25]]
-    p4 =[[0.5, 0.5], [0.5, 0.5]]
+    if alphabet_size == 2:
+        p1 =[[0.8, 0.2], [0.8, 0.2]]
+        p2 =[[0.85, 0.15], [0.85, 0.15]]
+        p3 =[[0.25, 0.75], [0.75, 0.25]]
+        p4 =[[0.5, 0.5], [0.5, 0.5]]
+    else:
+        p1 =[[0.8, 0.1,0.1], [0.8, 0.1,0.1], [0.8, 0.1,0.1]]
+        p2 =[[0.9, 0.05,0.05], [0.9, 0.05,0.05], [0.9, 0.05,0.05]]
+        p3 =[[0.20, 0.4,0.4], [0.8, 0.1,0.1], [0.8, 0.1,0.1]]
+        p4 =[[0.35, 0.35,0.3], [0.35, 0.35,0.3], [0.35, 0.35,0.3]]
     # p2 =[[0.5, 0.5], [0.5, 0.5]]
     # p2 = [[0.8, 0.1, 0.02, 0.02, 0.06],
     #     [0.8, 0.1, 0.02, 0.02, 0.06],
@@ -106,22 +112,22 @@ def run_datasmashing(tresholds, alphabet_size):
     #import collections
     #print collections.Counter(s1)
 
-    print_stream_in_file(saa1, 'saa1.txt')
-    print_stream_in_file(saa2, 'saa2.txt')
-    print_stream_in_file(saa3, 'saa3.txt')
-    print_stream_in_file(saa4, 'saa4.txt')
-    print_stream_in_file(sab1, 'sab1.txt')
-    print_stream_in_file(sab2, 'sab2.txt')
-    print_stream_in_file(sab3, 'sab3.txt')
-    print_stream_in_file(sab4, 'sab4.txt')
-    print_stream_in_file(sb1, 'sb1.txt')
-    print_stream_in_file(sb2, 'sb2.txt')
-    print_stream_in_file(sb3, 'sb3.txt')
-    print_stream_in_file(sb4, 'sb4.txt')
-    print_stream_in_file(sc1, 'sc1.txt')
-    print_stream_in_file(sc2, 'sc2.txt')
-    print_stream_in_file(sc3, 'sc3.txt')
-    print_stream_in_file(sc4, 'sc4.txt')
+    print_stream_in_file(saa1, str(alphabet_size) + '_saa1.txt')
+    print_stream_in_file(saa2, str(alphabet_size) + '_saa2.txt')
+    print_stream_in_file(saa3, str(alphabet_size) + '_saa3.txt')
+    print_stream_in_file(saa4, str(alphabet_size) + '_saa4.txt')
+    print_stream_in_file(sab1, str(alphabet_size) + '_sab1.txt')
+    print_stream_in_file(sab2, str(alphabet_size) + '_sab2.txt')
+    print_stream_in_file(sab3, str(alphabet_size) + '_sab3.txt')
+    print_stream_in_file(sab4, str(alphabet_size) + '_sab4.txt')
+    print_stream_in_file(sb1, str(alphabet_size) + '_sb1.txt')
+    print_stream_in_file(sb2, str(alphabet_size) + '_sb2.txt')
+    print_stream_in_file(sb3, str(alphabet_size) + '_sb3.txt')
+    print_stream_in_file(sb4, str(alphabet_size) + '_sb4.txt')
+    print_stream_in_file(sc1, str(alphabet_size) + '_sc1.txt')
+    print_stream_in_file(sc2, str(alphabet_size) + '_sc2.txt')
+    print_stream_in_file(sc3, str(alphabet_size) + '_sc3.txt')
+    print_stream_in_file(sc4, str(alphabet_size) + '_sc4.txt')
 
 
     #results = np.empty(tresholds.shape, dtype=float)
@@ -148,6 +154,7 @@ def run_datasmashing(tresholds, alphabet_size):
 tresholds = np.arange(0.4,0,-0.02) #np.array([0.5, 0.2, 0.05, 0.01, 0.005, 0.001])
 alphabet_size = 2
 run_datasmashing(tresholds, alphabet_size)
+run_datasmashing(tresholds, 3)
 # # fig = plt.figure()
 # # ax = fig.gca(projection='3d')
 # surf = ax.plot_surface(X, Y, results, rstride=1, cstride=1, facecolors=colors,
