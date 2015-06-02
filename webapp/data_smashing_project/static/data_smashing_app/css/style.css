@@ -20,6 +20,16 @@
     background-color: green;
 }
 
+.fill-orange
+{
+    background-color: orange;
+}
+
+.fill-light-green
+{
+    background-color: #00a000;
+}
+
 .padding-10
 {
     padding: 10 10 10 10;
@@ -46,3 +56,4 @@ h1, h2, h3, h4, h5, h6
 {
     font-size: 18;
 }
+

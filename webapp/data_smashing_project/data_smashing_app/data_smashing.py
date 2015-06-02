@@ -67,20 +67,22 @@ class Datasmashing:
         phi_v = self.phi(s, '')
         numerator = np.linalg.norm(phi_v - uniform_v, np.inf)                                
         denominator = 1
-        sum = numerator / denominator
+        sum1 = numerator / denominator
 
-        for l in range(1, l_max + 1):
+        for l in range(1, l_max + 1):            
             for variation in it.product(range(1, self.alphabet_size + 1), repeat=l):
                 # phi vector
                 phi_v = self.phi(s, variation)
-                # print phi_v
-                numerator = np.linalg.norm(phi_v - uniform_v, np.inf)
-                                
-                denominator = self.alphabet_size ** (2 * len(variation))
 
-                sum += numerator / denominator
+                if sum(phi_v) != 0:
+                    # print phi_v
+                    numerator = np.linalg.norm(phi_v - uniform_v, np.inf)
+                                    
+                    denominator = self.alphabet_size ** (2 * len(variation))
 
-        return coef * sum
+                    sum1 += numerator / denominator
+
+        return coef * sum1
 
     def phi(self, s, x):
         '''
@@ -92,6 +94,7 @@ class Datasmashing:
 
         s = ''.join(str(el) for el in s)
         x = ''.join(str(el) for el in x)
+
         result = []
 
         for i in range(1, self.alphabet_size + 1):
@@ -99,14 +102,49 @@ class Datasmashing:
             result.append(float(nominator))
 
         denom = sum(result)
-        # print result
-        # print x
-        # print s
-        # print denom
         
         if denom == 0:
             return [0] * self.alphabet_size
         return [x / float(denom) for x in result]
+
+    def deviation_magic(self, s, l_max):
+
+        stream_len = len(s)
+
+        ksi = 0
+
+        i = 1
+        while i <= l_max:
+            count = np.zeros(self.alphabet_size**i)
+            U = (1/self.alphabet_size ** i) * np.ones(self.alphabet_size ** i)
+
+            num = stream_len - (i - 1)
+            for j in range(num):
+                for j2 in range(self.alphabet_size ** i):
+                    atom = self.dec2bin(j2, i)
+                    if atom == ''.join(str(el) for el in s[j: j+i]):
+                        print count[j2-1]
+                        count[j2-1] = count[j2-1] + 1
+                        print count[j2-1]
+            print count
+            count = count / num
+            w = np.linalg.norm(np.absolute(count-U), np.inf)
+            w = w / (self.alphabet_size ** (2*(i-1)))
+            ksi = ksi + w
+            i = i + 1
+
+        return 0.5 * ksi
+
+
+    def dec2bin(self, num, length):
+
+        binary_string = bin(num)[2:]
+        num_of_zeros = length - len(binary_string)
+        binary_string = binary_string.replace('1', '2').replace('0', '1')
+        if num_of_zeros > 0:
+            return '1' * num_of_zeros + binary_string
+        return binary_string
+
 
     def generate(self, probs, length):
         '''
@@ -156,3 +194,6 @@ class Datasmashing:
         # epsilon21 = self.deviation(self.stream_sumation(s1_inverted, s2), l)
 
         return epsilon11
+
+# ds = Datasmashing(2)
+# print ds.dec2bin(5, 4)

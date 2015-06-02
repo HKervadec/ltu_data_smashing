@@ -1,7 +1,8 @@
 import numpy as np
-# import scipy.io as scio
+import scipy.io as scio
 from data_smashing import Datasmashing
 import csv
+from operator import itemgetter
 
 def load_data(file_name):
     ''' 
@@ -168,19 +169,139 @@ def quantizate_input_set(input_set, quantization_levels):
     return results
 
 
-# hmv, lmv1, lmv2 = read_data_for_vehicles('data.mat', [0.3, 1])
+
+def get_training_sets(hmv, lmv1, lmv2):
+    '''
+    function export training set depends on our observations
+    param: hmv - data for hmv cars
+    param: lmv1 - data for lmv1 cars
+    param: lmv2 - data for lmv2 cars
+    '''
+    result_hmv = np.concatenate((hmv[:, :7], hmv[:, 8:13], hmv[:, 14:16], hmv[:, 17:24], hmv[:, 25:27], hmv[:, 28:39],
+                                hmv[:, 41:44], hmv[:, 45: 49], hmv[:, 50:66], hmv[:, 67:70]), axis=1)
+    result_lmv1 = np.concatenate((lmv1[:, :2], lmv1[:, 3:7], lmv1[:, 8: 11],
+                                 lmv1[:, 12:22], lmv1[:, 23:24], lmv1[:, 25:34], lmv1[:, 35:36]), axis=1)
+    result_lmv2 = np.concatenate((lmv2[:, :7], lmv2[:, 8:12], lmv2[:, 13:26], lmv2[:, 27:30], lmv2[:, 32:43], 
+                                lmv2[:, 44:54], lmv2[:, 55:61], lmv2[:, 63:64], lmv2[:, 65:73], lmv2[:, 75:76],
+                                lmv2[:, 77:80], lmv2[:, 81:86], lmv2[:, 90:91], lmv2[:, 93:99], lmv2[:, 100:101]), axis=1)
+
+    return result_hmv, result_lmv1, result_lmv2
+
+def compute_similarities(stream, labeled_streams, alphabet_size, threshold):
+    '''
+    function compute similarity between stream and traingin streams
+    param: stream - strema to classify
+    param: labeled_streams - training stream with class lables in the first row
+    param: alphabet_size - size of the alphabet
+    param: threshold - data smashing threshold
+    '''
+    results = []
+    ds = Datasmashing(alphabet_size)
+    for i in range(labeled_streams.shape[1]):
+        sim_mat = ds.annihilation_circut(stream, labeled_streams[1:, i], threshold)
+        if sim_mat[0][1,1] < threshold:
+            results.append([labeled_streams[0, i], min(sim_mat[0][0,1], sim_mat[0][1,0])])
+        else:
+            print 'Selfcheck value for ' + str(i) + 'th training stream was too high: ' + str(sim_mat[1, 1])
+
+    return sorted(results, key=itemgetter(1))
+
+def classification_simple(stream, labeled_streams, alphabet_size, threshold, num_of_best):
+    '''
+    function does classification for strem according to training_streams
+    method get num of num_of_best most similar training streams and return label with the hightest frequency
+    param: stream - strema to classify
+    param: labeled_streams - training stream with class lables in the first row
+    param: alphabet_size - size of the alphabet
+    param: threshold - data smashing threshold
+    param: num_of_best - number of the most similar stream we are checking
+    '''
+    similarity = compute_similarities(stream, labeled_streams, alphabet_size, threshold)
+    counter = [0, 0, 0]
+    for row in similarity[0:num_of_best]:
+        counter[int(row[0])] += 1 
+
+    return counter.index(max(counter))
+
+def classification_average(stream, labeled_streams, alphabet_size, threshold):
+    '''
+    function does classification for strem according to training_streams
+    method take average similarity for every class and take the best
+    param: stream - strema to classify
+    param: labeled_streams - training stream with class lables in the first row
+    param: alphabet_size - size of the alphabet
+    param: threshold - data smashing threshold
+    param: num_of_best - number of the most similar stream we are checking
+    '''
+    similarity = compute_similarities(stream, labeled_streams, alphabet_size, threshold)
+    sums = [0, 0, 0]
+    counter = [0, 0, 0]
+    for row in similarity:
+        counter[int(row[0])] += 1
+        sums[int(row[0])] += row[1]
+    print counter
+    sums = [sums[i] / counter[i] for i in range(len(counter))]
+
+    return sums.index(min(sums))
+
+def classification_simple_list(streams, labeled_streams, alphabet_size, threshold, num_of_best):
+    '''
+    function make simple classification for whole streams array
+    param: streams - list of streams
+    param: labeled_streams - training stream with class lables in the first row
+    param: alphabet_size - size of the alphabet
+    param: threshold - data smashing threshold
+    param: num_of_best - number of the most similar stream we are checking
+    '''
+    results = []
+    counter = 0
+    for i in range(streams.shape[1]):
+        results.append(classification_simple(streams[:, i], labeled_streams, alphabet_size, threshold, num_of_best))
+        print i
+    return results
+
+def classification_average_list(streams, labeled_streams, alphabet_size, threshold):
+    '''
+    function make simple classification for whole streams array
+    param: streams - list of streams
+    param: labeled_streams - training stream with class lables in the first row
+    param: alphabet_size - size of the alphabet
+    param: threshold - data smashing threshold
+    param: num_of_best - number of the most similar stream we are checking
+    '''
+    results = []
+    counter = 0
+    for i in range(streams.shape[1]):
+        results.append(classification_average(streams[:, i], labeled_streams, alphabet_size, threshold))
+        print i
+    return results
+
+
+hmv, lmv1, lmv2 = read_data_for_vehicles('data.mat', [0.3, 1])
+
+train_hmv, train_lmv1, train_lmv2 = get_training_sets(hmv, lmv1, lmv2)
+
+train_hmv = np.concatenate((np.ones((1, train_hmv.shape[1])) * 0, train_hmv), axis=0)
+train_lmv1 = np.concatenate((np.ones((1, train_lmv1.shape[1])) * 1, train_lmv1), axis=0)
+train_lmv2 = np.concatenate((np.ones((1, train_lmv2.shape[1])) * 2, train_lmv2), axis=0)
+
+labeled_streams = np.concatenate((train_hmv, train_lmv1, train_lmv2), axis=1)
+
+print classification_average_list(hmv[:, 70:100], labeled_streams, 2, 0.3)
+
+
 
 
 # from algorithm_test import print_stream_in_file
 
-# for i in range(hmv.shape[1]):
-#     print_stream_in_file(hmv[:,i], 'hmv-' + str(i) + '.txt')
+# for i in range(train_hmv.shape[1]):
+#     print_stream_in_file(train_hmv[:,i], 'hmv-train-' + str(i) + '.txt')
 
-# for i in range(lmv1.shape[1]):
-#     print_stream_in_file(lmv1[:,i], 'lmv1-' + str(i) + '.txt')
+# for i in range(train_lmv1.shape[1]):
+#     print_stream_in_file(train_lmv1[:,i], 'lmv1-train-' + str(i) + '.txt')
 
-# for i in range(lmv2.shape[1]):
-#     print_stream_in_file(lmv2[:,i], 'lmv2-' + str(i) + '.txt')
+# for i in range(train_lmv2.shape[1]):
+#     print_stream_in_file(train_lmv2[:,i], 'lmv2-train-' + str(i) + '.txt')
 
 # print lmv1[:,1:3]
 

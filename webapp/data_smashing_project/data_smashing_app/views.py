@@ -27,6 +27,7 @@ def visualizer(request):
 
         # read threshold and quantization levels
         threshold = float(request.POST.get("threshold", ""))
+        class_threshold = float(request.POST.get("class_threshold", ""))
         quantization = request.POST.get("quantization", "").split()
         quantization = [float(x) for x in quantization]
         # TODO: data prcessing is called
@@ -39,6 +40,7 @@ def visualizer(request):
         dict['independent_stream_copies'] = zip(filenames, independent_stream_copies)
         dict['stream_sumations'] = zip( [x for x in filenames for i in range(len(filenames))], filenames * (len(filenames)), stream_sumations)
         dict['threshold'] = threshold
+        dict['class_threshold'] = class_threshold
 
         dict['data_posted'] = True
 

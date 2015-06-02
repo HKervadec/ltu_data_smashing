@@ -15,7 +15,8 @@
             <input type="file" name="myfiles" multiple class="btn btn-default btn-file btn-block form-control">
             <br/>
             Quantization levels: <input type="text" name="quantization" class="form-control"><br/>
-            Threshold : <input type="text" name="threshold" class="form-control">
+            Threshold : <input type="text" name="threshold" class="form-control"><br/>
+            Classification threshold : <input type="text" name="class_threshold" class="form-control">
             <br/><br/>
             <input type="submit" name="upload" class="btn-block btn btn-primary" value="Upload signal">
             {% csrf_token %}
@@ -25,9 +26,10 @@
     <div class="col-md-6 font-size-18">
         <p> Upload your data using that form.</p>
         <p> Data in files have to be seperated using new line. You have to upload at least two data files. Each file contains only one signal set.</p>
-        <p> In field quantization please provide coma sperated quantization levels. That levels are delimiter between two classes in quantization process. For example if you want to have alphabet wiht two symbols first symobl describe data lower than 2 and the second others then quantization level is 2. If you want to have tree classes then provide two levels seperated with coma (e.g. 1, 2). Levels are of type float. </p>
+        <p> In field quantization please provide space sperated quantization levels. That levels are delimiter between two classes in quantization process. For example if you want to have alphabet wiht two symbols first symobl describe data lower than 2 and the second others then quantization level is 2. If you want to have tree classes then provide two levels seperated with space (e.g. 1 2). Levels are of type float. </p>        
         <p> Threshold is value that is used to separate similar signals from different. 
         </p>
+        <p> Classification threshold is the border value of similarity and dissimilarity. </p>
     </div>
 </div>
 
@@ -48,14 +50,18 @@
             </tr>
             {% for row in similarity %}
             <tr>
+                {% with forloop.counter as i %} 
                 <td class="padding-10">
                     {{row.0}}
                 </td>
                 {% for data in row.1 %}
-                    <td class="result-table-cell {% if data > threshold %} fill-red {% else %} fill-green {% endif %}">
+                    {% with forloop.counter as j %} 
+                    <td class="result-table-cell {% if i == j and  data <= threshold %} fill-light-green {% elif i == j and data > threshold %}  fill-orange {% elif data > class_threshold %} fill-red {% else %} fill-green {% endif %}">
                         {{data|floatformat:3}}
                     </td>
+                    {% endwith %}
                 {% endfor %}
+                {% endwith %}
             </tr>
             {% endfor %}
         </table>
