@@ -1,5 +1,5 @@
 import numpy as np
-import scipy.io as scio
+# import scipy.io as scio
 from data_smashing import Datasmashing
 import csv
 from operator import itemgetter
@@ -239,7 +239,7 @@ def classification_average(stream, labeled_streams, alphabet_size, threshold):
     for row in similarity:
         counter[int(row[0])] += 1
         sums[int(row[0])] += row[1]
-    print counter
+    # print counter
     sums = [sums[i] / counter[i] for i in range(len(counter))]
 
     return sums.index(min(sums))
@@ -277,18 +277,27 @@ def classification_average_list(streams, labeled_streams, alphabet_size, thresho
     return results
 
 
-hmv, lmv1, lmv2 = read_data_for_vehicles('data.mat', [0.3, 1])
+# hmv, lmv1, lmv2 = read_data_for_vehicles('data.mat', [0.3, 1])
 
-train_hmv, train_lmv1, train_lmv2 = get_training_sets(hmv, lmv1, lmv2)
+# train_hmv, train_lmv1, train_lmv2 = get_training_sets(hmv, lmv1, lmv2)
 
-train_hmv = np.concatenate((np.ones((1, train_hmv.shape[1])) * 0, train_hmv), axis=0)
-train_lmv1 = np.concatenate((np.ones((1, train_lmv1.shape[1])) * 1, train_lmv1), axis=0)
-train_lmv2 = np.concatenate((np.ones((1, train_lmv2.shape[1])) * 2, train_lmv2), axis=0)
+# train_hmv = np.concatenate((np.ones((1, train_hmv.shape[1])) * 0, train_hmv), axis=0)
+# train_lmv1 = np.concatenate((np.ones((1, train_lmv1.shape[1])) * 1, train_lmv1), axis=0)
+# train_lmv2 = np.concatenate((np.ones((1, train_lmv2.shape[1])) * 2, train_lmv2), axis=0)
 
-labeled_streams = np.concatenate((train_hmv, train_lmv1, train_lmv2), axis=1)
+# labeled_streams = np.concatenate((train_hmv, train_lmv1, train_lmv2), axis=1)
 
-print classification_average_list(hmv[:, 70:100], labeled_streams, 2, 0.3)
+# result =  classification_average_list(hmv[:, 70:100], labeled_streams, 2, 0.3)
+# print result
+# print 'accuracy', float(result.count(0)) / float(len(result))
 
+# result =  classification_average_list(lmv1[:, 35:], labeled_streams, 2, 0.3)
+# print result
+# print 'accuracy', float(result.count(1)) / float(len(result))
+
+# result =  classification_average_list(lmv2[:, 105:135], labeled_streams, 2, 0.3)
+# print result
+# print 'accuracy', float(result.count(2)) / float(len(result))
 
 
 
