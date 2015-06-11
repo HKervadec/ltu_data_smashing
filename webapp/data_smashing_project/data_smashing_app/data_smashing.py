@@ -11,6 +11,8 @@ class Datasmashing:
     def stream_sumation(self, s1, s2):
         '''
         Function sums streams s1 and s2
+        param: s1 - stream one
+        param: s2 - stream two
         '''
         result = []
         for i1, i2 in zip(s1, s2):
@@ -23,12 +25,14 @@ class Datasmashing:
         '''
         function create flat white noise (uniform distribution
         of alphabet symbols) of length length
+        param: length - length of stream we crate
         '''
         return np.random.randint(1, self.alphabet_size+1, size=length)
 
     def independent_stream_copy(self, s):
         '''
         function make intedpendent stream copy of s
+        param: s - stream for which we create independetn stream copy
         '''
         return self.stream_sumation(s, self.fwn(len(s)))
         # TODO: what if it is empty?
@@ -36,6 +40,7 @@ class Datasmashing:
     def stream_inversion(self, s):
         '''
         function invert stream s
+        param: s - stream we invert
         '''
         stream_copies = []
         shortest_length = sys.maxint
@@ -59,6 +64,12 @@ class Datasmashing:
         return stream_invert
 
     def deviation(self, s, l_max):
+        '''
+        function calculate deviation measure defined in datasmashing algorithm_test
+        param: s - stream for which deviation is calculated
+        param: l_max - maximal lenght used in deviation
+        '''
+
         coef = float(self.alphabet_size - 1.0) / self.alphabet_size
         
         uniform_v = np.ones(self.alphabet_size) / self.alphabet_size
@@ -86,10 +97,9 @@ class Datasmashing:
 
     def phi(self, s, x):
         '''
-
-        :param s: string
-        :param x: substring of s
-        :return:
+        function calcuate devation phi defined in data smashing algorithm
+        param s: string
+        param x: substring of s
         '''
 
         s = ''.join(str(el) for el in s)
@@ -108,7 +118,11 @@ class Datasmashing:
         return [x / float(denom) for x in result]
 
     def deviation_magic(self, s, l_max):
-
+        '''
+        function calculate deviation measure using Denis approach
+        param: s - stream for which deviation is calculated
+        param: l_max - maximal lenght used in deviation
+        '''
         stream_len = len(s)
 
         ksi = 0
@@ -137,6 +151,12 @@ class Datasmashing:
 
 
     def dec2bin(self, num, length):
+        '''
+        function is used to change stream made of 0 and 10
+        to stream made of 1 and 2
+        param: num - stream to be changed
+        param: length - length 
+        '''
 
         binary_string = bin(num)[2:]
         num_of_zeros = length - len(binary_string)
@@ -167,6 +187,13 @@ class Datasmashing:
         return vector
 
     def annihilation_circut(self, s1, s2, treshold):
+        '''
+        annihilation_circut calculate deviations between s1 and s2 such
+        that we get similarity between those two streams
+        param: s1 - stream 1
+        param: s2 - stream 2
+        param: threshold - threshold is border which tell if streams are similar or not
+        '''
         s1_inverted = self.stream_inversion(s1)
         s2_inverted = self.stream_inversion(s2)
 
@@ -184,16 +211,17 @@ class Datasmashing:
         return matrix, (epsilon22 < treshold and epsilon11 < treshold)
 
     def copy_smashing(self, s1, threshold):
+        '''
+        function makes deviations with strem itself
+        param: s1 - stream 
+        param: threshold - threshold is border which tell if streams are similar or not
+        '''
+
         s_copy = self.independent_stream_copy(s1)
         s1_inverted = self.stream_inversion(s1)
 
         l = int(np.log(1 / threshold) / np.log(self.alphabet_size))       
-       
 
         epsilon11 = self.deviation(self.stream_sumation(s_copy, s1_inverted), l)
-        # epsilon21 = self.deviation(self.stream_sumation(s1_inverted, s2), l)
 
         return epsilon11
-
-# ds = Datasmashing(2)
-# print ds.dec2bin(5, 4)
